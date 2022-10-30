@@ -21,11 +21,11 @@ weatherRouter.get('/weatherData',async (req, res) => {
 		{ "_id": 0, "createdAt": 0, "updatedAt": 0, "__v": 0 }
 	);
 	const weatherCurrent =await  axios.get(
-		`http://api.weatherapi.com/v1/current.json?key=${process.env.WEATHER_API_KEY}&q=London&aqi=no`
+		`http://api.weatherapi.com/v1/current.json?key=${process.env.WEATHER_API_KEY}&q=calicut&aqi=no`
 	);
 
 	const weatherForecast = await axios.get(
-		`http://api.weatherapi.com/v1/forecast.json?key=${process.env.WEATHER_API_KEY}&q=London&days=1&aqi=no&alerts=no`
+		`http://api.weatherapi.com/v1/forecast.json?key=${process.env.WEATHER_API_KEY}&q=calicut&days=1&aqi=no&alerts=no`
 	); 
 		// console.log(dataCreated);
 		// const data = await weatherModal.findOne(
@@ -50,10 +50,10 @@ weatherRouter.get('/weatherData',async (req, res) => {
 		dusk: weatherForecast.data.forecast.forecastday[0].astro.sunset,
 		moonlit: weatherForecast.data.forecast.forecastday[0].astro.moonrise,
 		moonsleep: weatherForecast.data.forecast.forecastday[0].astro.moonset,
-		orientation: weatherForecast.data.forecast.forecastday[0].astro.moon_phase,
+		orientation: weatherForecast.data.forecast.forecastday[0].astro.moon_phase, 
 		illumination: weatherForecast.data.forecast.forecastday[0].astro.moon_illumination,
 	});
 
-	res.send(data); 
+	res.send(dataCreated);  
 }) 
 module.exports = weatherRouter
