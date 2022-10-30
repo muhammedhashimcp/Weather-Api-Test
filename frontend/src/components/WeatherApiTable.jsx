@@ -1,39 +1,58 @@
 import React, { useEffect, useState } from 'react';
-import { data, titles } from '../titles';
 import axios from 'axios';
+import { titles } from '../utils/titles';
 const WeatherApiTable = () => {
-		const [checkedState, setCheckedState] = useState(
-			new Array(titles.length).fill(false)
-		);
-		console.log("🚀 ~ file: WeatherApiTable.jsx ~ line 8 ~ WeatherApiTable ~ checkedState", checkedState)
-		const handleOnChange = (position) => {
-		const updatedCheckedState = checkedState.map((item, index) =>
-			index === position ? !item : item
-		);
-		setCheckedState(updatedCheckedState);
-	
 	const [weatherData, setWeatherData] = useState(titles);
+
+	const [isCheckAllFields, setIsCheckAllFields] = useState(false);
+	// const [isCheck, setIsCheck] = useState([]);
+	const [checkedFields, setCheckedFields] = useState([]);
+	console.log("🚀 ~ file: WeatherApiTable.jsx ~ line 10 ~ WeatherApiTable ~ checkedFields", checkedFields)
+
+	// checkbox change
+	// const handleOnChange = (title) => {
+
+	// 	const updatedCheckedState = weatherData.filter((item) =>
+	// 		title === item.title ? title : ''
+	// 	);
+	// 	setCheckedFields(updatedCheckedState);
+	// };
+
+	const handleSelectAll = (e) => {
+		setIsCheckAllFields(!isCheckAllFields);
+		setCheckedFields(weatherData.map((item) => item.title));
+		if (isCheckAllFields) {
+			setCheckedFields([]);
+		}
+	};
+
+	const handleClick = (e) => {
+		const { id, checked } = e.target;
+		console.log("🚀 ~ file: WeatherApiTable.jsx ~ line 31 ~ handleClick ~ e.target", e.target)
+		setCheckedFields([...checkedFields, id]);
+		if (!checked) {
+			setCheckedFields(checkedFields.filter((item) => item !== id));
+		}
+	};
+
 	// useEffect(() => {
-	// 	setWeatherData(titles);
+	// 	axios.get('http://localhost:5000/api/weather').then((response) => {
+	// 		console.log(response?.data);
+	// 		setWeatherData(response?.data[0]);
+	// 	});
 	// }, []);
 
-	const onSubmitHandler = (e) => {
-		e.preventDefault();
-		console.log(
-			'🚀 ~ file: WeatherApiTable.jsx ~ line 18 ~ onSubmitHandler ~ onSubmitHandler'
-		);
-		axios.get('http://localhost:5000/api/weather').then((response) => {
-			console.log(response?.data);
-			setWeatherData(response?.data[0])
-		})
-	}
+	// const handleOnChange = (position) => {
+	// 	const updatedCheckedState
+	// }
 	return (
 		<div className=" flex flex-col justify-center mx-auto">
 			<h3 className="mb-4 mx-auto font-semibold text-gray-900 dark:text-white">
 				Weather Apis
 			</h3>
 
-			<form action='' onSubmit={onSubmitHandler}  className="w-4xl">
+			<form action="" className="w-4xl">
+				{/* search box */}
 				<input
 					type="text"
 					placeholder=" Search a town"
@@ -43,9 +62,11 @@ const WeatherApiTable = () => {
 					<thead className="w-full text-xl border-2 border-zinc-300 ">
 						<tr className="capitalize">
 							<td className="pl-5 inline-flex">
+								{/* Select all input */}
 								<input
 									type="checkbox"
 									className="w-6 h-6 my-auto "
+									onClick={handleSelectAll}
 								/>
 								<label htmlFor="" className="ml-2">
 									{' '}
@@ -57,44 +78,43 @@ const WeatherApiTable = () => {
 						</tr>
 					</thead>
 					<tbody className="w-full text-gray-900 bg-white rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-						{/* {Object.entries(weatherData).map(([key,value],index) => ( */}
-						{/* {data.map((title, index) => ( */}
-						{Object.entries(weatherData).map(
-							([key, value], index) => (
-								<tr
-									key={index}
-									className="w-full  rounded-t-lg border-b border-gray-200 dark:border-gray-600"
-								>
-									{/* <div className="flex items-center pl-3"> */}
-									<td>
-										<input
-											id="vue-checkbox"
-											type="checkbox"
-											value=""
-											className="w-4 h-4 ml-5 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-										/>
-									</td>
-									<td>
-										<label
-											htmlFor="vue-checkbox"
-											className="py-3 ml-5 capitalize w-full text-sm font-medium text-gray-900 dark:text-gray-300"
-										>
-											{key}
-										</label>
-									</td>
-									<td>
-										<label
-											htmlFor="vue-checkbox"
-											className="py-3 ml-5 w-full  text-sm font-medium text-gray-900 dark:text-gray-300"
-										>
-											{value}
-											{/* {title} */}
-										</label>
-									</td>
-									{/* </div> */}
-								</tr>
-							)
-						)}
+						{weatherData.map((title, index) => (
+							<tr
+								key={index}
+								className="w-full  rounded-t-lg border-b border-gray-200 dark:border-gray-600"
+							>
+								{/* <div className="flex items-center pl-3"> */}
+								<td>
+									<input
+										type="checkbox"
+										name={title.title}
+										value={title.title}
+										id={title.title}
+										checked={checkedFields[index]}
+										onClick={(e) =>
+											handleClick(e)
+										}
+									/>
+								</td>
+								<td>
+									<label
+										htmlFor="vue-checkbox"
+										className="py-3 ml-5 capitalize w-full text-sm font-medium text-gray-900 dark:text-gray-300"
+									>
+										{title.title}
+									</label>
+								</td>
+								{/* <td>
+									<label
+										htmlFor="vue-checkbox"
+										className="py-3 ml-5 w-full  text-sm font-medium text-gray-900 dark:text-gray-300"
+									>
+										
+									</label>
+								</td> */}
+								{/* </div> */}
+							</tr>
+						))}
 					</tbody>
 				</table>
 
@@ -108,5 +128,4 @@ const WeatherApiTable = () => {
 		</div>
 	);
 };
-
 export default WeatherApiTable;

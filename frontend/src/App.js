@@ -1,11 +1,13 @@
-import MultipleCheckbox from "./components/MutipleCheckbox";
-import WeatherApiTable from "./components/WeatherApiTable";
+import WeatherApi from './screens/WeatherApi';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
+
 	return (
-		<div className="text-red-600 text-bold text-3xl">
-			<MultipleCheckbox/>
-			<WeatherApiTable/>
+		<div className="flex justify-center">
+			<ToastContainer  limit={1} />
+			<WeatherApi />
 		</div>
 	);
 }

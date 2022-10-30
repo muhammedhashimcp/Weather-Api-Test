@@ -14,8 +14,8 @@ export default function MultipleCheckbox() {
 		const updatedCheckedState = checkedState.map((item, index) =>
 			index === position ? !item : item
 		);
-
 		setCheckedState(updatedCheckedState);
+		console.log("🚀 ~ file: MutipleCheckbox.jsx ~ line 19 ~ handleOnChange ~ updatedCheckedState", updatedCheckedState)
 
 		const totalPrice = updatedCheckedState.reduce(
 			(sum, currentState, index) => {

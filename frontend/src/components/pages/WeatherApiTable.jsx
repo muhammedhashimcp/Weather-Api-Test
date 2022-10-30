@@ -1,21 +1,53 @@
 import React, { useEffect, useState } from 'react';
-import { data, titles } from '../titles';
-import axios from 'axios'
-const WeatherApiTables = () => {
-	const [weatherData,setWeatherData]=useState({})
+import axios from 'axios';
+import { titles } from '../../utils/fields';
+import CheckboxItem from './CheckboxItem';
+const WeatherApiTable = () => {
+	const [weatherData, setWeatherData] = useState(titles);
+
+	const [isCheckAll, setIsCheckAll] = useState(false);
+	const [isCheck, setIsCheck] = useState([]);
+	const [list, setList] = useState([]);
+
 	useEffect(() => {
-		axios.get('http://localhost:5000/api/weather').then((response) => {
-			console.log(response?.data);
-			setWeatherData(response?.data[0])
-		})
-	},[])
+		setList(titles);
+	}, [list]);
+
+	const handleSelectAll = (e) => {
+		setIsCheckAll(!isCheckAll);
+		setIsCheck(list.map((li) => li.title));
+		if (isCheckAll) {
+			setIsCheck([]);
+		}
+	};
+
+	const handleClick = (e) => { 
+	
+		const { id, checked } = e.target;
+		setIsCheck([...isCheck, id]);
+		if (!checked) {
+			setIsCheck(isCheck.filter((item) => item !== id));
+		}
+	};
+
+	// useEffect(() => {
+	// 	axios.get('http://localhost:5000/api/weather').then((response) => {
+	// 		console.log(response?.data);
+	// 		setWeatherData(response?.data[0]);
+	// 	});
+	// }, []);
+
+	// const handleOnChange = (position) => {
+	// 	const updatedCheckedState
+	// }
 	return (
 		<div className=" flex flex-col justify-center mx-auto">
 			<h3 className="mb-4 mx-auto font-semibold text-gray-900 dark:text-white">
 				Weather Apis
 			</h3>
 
-			<form action="" className="w-4xl">
+			<div className="w-4xl">
+				{/* search box */}
 				<input
 					type="text"
 					placeholder=" Search a town"
@@ -25,34 +57,35 @@ const WeatherApiTables = () => {
 					<thead className="w-full text-xl border-2 border-zinc-300 ">
 						<tr className="capitalize">
 							<td className="pl-5 inline-flex">
-								<input
+								{/* Select all input */}
+								<CheckboxItem
 									type="checkbox"
-									className="w-6 h-6 my-auto "
+									name="selectAll"
+									id="selectAll"
+									handleClick={handleSelectAll}
+									isChecked={isCheckAll}
 								/>
-								<label htmlFor="" className="ml-2">
-									{' '}
-									Select All{' '}
-								</label>
+								Select All
 							</td>
 							<td>titles</td>
 							<td>values</td>
 						</tr>
 					</thead>
 					<tbody className="w-full text-gray-900 bg-white rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-						{/* {Object.entries(weatherData).map(([key,value],index) => ( */}
-						{/* // {Object.entries(weatherData).map(([key,value],index) => ( */}
-						{data.map((title, index) => (
+						{list.map(({title, id}) => (
 							<tr
-								key={index}
+								key={id}
 								className="w-full  rounded-t-lg border-b border-gray-200 dark:border-gray-600"
 							>
 								{/* <div className="flex items-center pl-3"> */}
 								<td>
-									<input
-										id="vue-checkbox"
+									<CheckboxItem
+										key={id}
 										type="checkbox"
-										value=""
-										className="w-4 h-4 ml-5 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+										name={title}
+										id={id}
+										handleClick={handleClick}
+										isChecked={isCheck.includes(title)}
 									/>
 								</td>
 								<td>
@@ -63,30 +96,28 @@ const WeatherApiTables = () => {
 										{title}
 									</label>
 								</td>
-								<td>
+								{/* <td>
 									<label
 										htmlFor="vue-checkbox"
 										className="py-3 ml-5 w-full  text-sm font-medium text-gray-900 dark:text-gray-300"
 									>
-										{/* {value} */}
-										{title}
+										
 									</label>
-								</td>
+								</td> */}
 								{/* </div> */}
 							</tr>
 						))}
 					</tbody>
 				</table>
 
-				<button
+				{/* <button
 					type="submit"
 					className="bg-black my-3 w-2xl text-white mx-auto flex justify-center"
 				>
 					Submit
-				</button>
-			</form>
+				</button> */}
+			</div>
 		</div>
 	);
 };
-
-export default WeatherApiTables;
+export default WeatherApiTable;
