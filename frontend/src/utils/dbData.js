@@ -1,0 +1,15 @@
+export const dbData = {
+	town: 'Calicut',
+	state: 'Kerala',
+	nation: 'India',
+	latitude: 11.25,
+	longitude: 75.77,
+	timezone: 'Asia/Kolkata',
+	time: { $date: { $numberLong: '1667113620000' } },
+	dawn: '06:18 AM',
+	dusk: '06:03 PM',
+	moonlit: '11:01 AM',
+	moonsleep: '10:42 PM',
+	orientation: 'Waxing Crescent',
+	illumination: 33,
+};

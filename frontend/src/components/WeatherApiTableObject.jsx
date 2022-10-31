@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { data, titles } from '../titles';
 import axios from 'axios';
-const WeatherApiTable = () => {
+const WeatherApiTableObject = () => {
 		const [checkedState, setCheckedState] = useState(
 			new Array(titles.length).fill(false)
 		);
@@ -60,7 +60,7 @@ const WeatherApiTable = () => {
 						{/* {Object.entries(weatherData).map(([key,value],index) => ( */}
 						{/* {data.map((title, index) => ( */}
 						{Object.entries(weatherData).map(
-							([key, value], index) => (
+([key, value]) => (
 								<tr
 									key={index}
 									className="w-full  rounded-t-lg border-b border-gray-200 dark:border-gray-600"
@@ -109,4 +109,4 @@ const WeatherApiTable = () => {
 	);
 };
 
-export default WeatherApiTable;
+export default WeatherApiTableObject

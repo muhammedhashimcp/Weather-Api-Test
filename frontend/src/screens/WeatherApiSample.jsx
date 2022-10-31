@@ -2,22 +2,18 @@ import React, { useEffect, useState } from 'react';
 import CheckboxItem from './CheckboxItem';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import { dbData } from '../utils/dbData';
 //  import { Formik, Form, Field } from 'formik';
 //  import * as Yup from 'yup';
 import { titles } from './fields';
-import Output from './Output';
 const WeatherApi = () => {
 	const [query, setQuery] = useState('');
-	const [output, setOutput] = useState({});
 	const [showData, setShowData] = useState(false);
 	const [isCheckAll, setIsCheckAll] = useState(false);
 	const [checkedFields, setCheckedFields] = useState([]);
 	const [weatherData, setWeatherData] = useState([]);
 	console.log(
 		'🚀 ~ file: WeatherApi.jsx ~ line 13 ~ WeatherApi ~ weatherData',
-		output,
-		showData
+		weatherData
 	);
 
 	useEffect(() => {
@@ -47,7 +43,14 @@ const WeatherApi = () => {
 
 	const handleChange = (value) => {
 		setQuery(value.toLowerCase());
-	
+		// Function to check letters and numbers
+		// let letter = /^[a-zA-Z]+$/;
+		// if ((value.match(letter))) {
+		// 	setQuery(value.toLowerCase());
+		// } else {
+		// 	toast.error('City never contain a number');
+		// 	return;
+		// }
 	};
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -56,29 +59,13 @@ const WeatherApi = () => {
 		} else if (checkedFields.length === 0) {
 			toast.error('Please a select at least one field');
 		} else {
-			// axios.get('http://localhost:5000/api/weather').then((response) => {
-			// 	console.log(response?.data);
-			// 	setShowData(true);
-			// 	setOutput(response?.data[0]);
-			// })
-			axios.post(`http://localhost:5000/api/weatherData`, null,{
-					checkedFields,
-				})
-				.then((response) => {
-					console.log(response
-					setShowData(true);
-					setOutput(response?.data[0]);
-				});
+			setShowData(true)
+			axios.get('http://localhost:5000/api/weather').then((response) => {
+				console.log(response?.data);
+				setWeatherData(response?.data[0]);
+			});
 		}
 	};
-	const handleClear = () => {
-		console.log("🚀 ~ file: WeatherApi.jsx ~ line 77 ~ handleClear ~ handleClear")
-		setOutput({})
-		setQuery('')
-		setCheckedFields([])
-		setShowData(false);
-		setIsCheckAll(false)
-	}
 	return (
 		<div className=" flex w-full flex-col text-xl justify-center mx-auto">
 			<h3 className="mb-4 mx-auto font-semibold text-gray-900 dark:text-white">
@@ -117,16 +104,16 @@ const WeatherApi = () => {
 						</tr>
 					</thead>
 					<tbody className="w-full text-gray-900 bg-white rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-						{!showData  ? (
-							weatherData.map(({ title, id }) => (
-								<tr
-									key={id}
-									className="rounded-t-lg border-b border-gray-200 "
-								>
-									{console.log('hellow')}
+						{!showData?(weatherData.map(({ title, id }) => (
+
+							<tr
+								key={id}
+								className="rounded-t-lg border-b border-gray-200 "
+							>
+								{
 									<td className="flex  justify-center my-2 ">
 										<CheckboxItem
-											key={id}
+											key={title}
 											type="checkbox"
 											name={title}
 											id={title}
@@ -136,32 +123,45 @@ const WeatherApi = () => {
 											)}
 										/>
 									</td>
+								}
+								<td className="ml-5  ">
+									<h3>{title}</h3>
+								</td>
+								{showData && (
 									<td className="ml-5  ">
-										<h3>{title}</h3>
+										{/* <h3>{value}</h3> */}
 									</td>
-								</tr>
-							))
-						) : (
-							<Output weatherData={output} />
-						)}
+								)}
+							</tr>
+						)):(
+					Object.entries(weatherData).map((key,value) => (
+
+							<tr
+								key={key}
+								className="rounded-t-lg border-b border-gray-200 "
+							>
+								
+								<td className="ml-5  ">
+									<h3>{key}</h3>
+									<h3>{value}</h3>
+								</td>
+								{showData && (
+									<td className="ml-5  ">
+										{/* <h3>{value}</h3> */}
+									</td>
+								)}
+							</tr>
+						)
+						</>)}
+						
 					</tbody>
 				</table>
-
-				{showData  ? (
-					<button
-						onClick={() => handleClear()}
-						className="bg-black my-3 w-2xl text-white mx-auto flex justify-center"
-					>
-						clear
-					</button>
-				) : (
-					<button
-						type="submit"
-						className="bg-black my-3 w-2xl text-white mx-auto flex justify-center"
-					>
-						Submit
-					</button>
-				)}
+				<button
+					type="submit"
+					className="bg-black my-3 w-2xl text-white mx-auto flex justify-center"
+				>
+					Submit
+				</button>
 			</form>
 			{/* </Formik> */}
 		</div>
